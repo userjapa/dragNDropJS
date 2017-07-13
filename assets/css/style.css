@@ -1,0 +1,43 @@
+html, body {
+    height: 100%;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    text-align: center;
+    font-family: sans-serif;
+}
+
+body div {
+    width: 99%;
+    margin: 5px;
+    float: left;
+}
+
+.drag {
+    border: 2px solid red;
+    height: 90%;
+    width: 48%;
+}
+
+.drop {
+    border: 2px solid green;
+    height: 90%;
+    width: 48%;
+}
+
+.item {
+    border: 2px dotted red;
+    height: 10%;
+    width: 90%;
+}
+
+.item-drop {
+    border: 2px dotted green;
+    height: 10%;
+    width: 90%;
+}

@@ -63,18 +63,14 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 1);
+/******/ 	return __webpack_require__(__webpack_require__.s = 2);
 /******/ })
 /************************************************************************/
 /******/ ([
 /* 0 */
-/***/ (function(module, exports) {
+/***/ (function(module, exports, __webpack_require__) {
 
-var item = document.getElementsByClassName('item'),
-    itemdrop = document.getElementsByClassName('item-drop'),
-    drop = document.getElementsByClassName('drop');
-
-var toDrop;
+let rules = __webpack_require__(1)
 
 let addAtribute = (e) => {
     e.setAttribute('draggable', 'true');
@@ -99,59 +95,126 @@ let addDrop = (e) => {
 
     e.addEventListener('drop', (ev) => {
         ev.preventDefault();
-        ev.target.appendChild(toDrop);
-        console.log(toDrop.className+' dropped');
+        if (rules.check(ev.target)) {
+            ev.target.appendChild(fromDrop);
+            console.log('Drop to '+ev.target.className);
+        } else {
+            console.log('NOT A VALID ELEMENT TO BE DROPED!');
+        }
     }, false);
 }
 
-let inset = () => {
-    for (e of item) add(e)
-    for (e of drop) addDrop(e);
-    for (e of itemdrop) addDrop(e);
+let addTrash = (e) => {
+    e.addEventListener('dragover', (ev) => {
+        ev.preventDefault();
+        console.log('Prepared to drop');
+    }, false);
+
+    e.addEventListener('drop', (ev) => {
+        ev.preventDefault();
+        if (rules.remove(ev.target)) {
+            fromDrop.parentNode.removeChild(fromDrop);
+            console.log('deleted');
+        } else {
+            console.log('NOT A VALID ELEMENT TO BE DROPED!');
+        }
+    }, false)
 }
 
 let insert = (e) => {
     e.addEventListener('dragstart', (ev) => {
-        toDrop = ev.target.cloneNode(true);
-        console.log('To drop: '+toDrop.className);
+        if (rules.paretIsDrag(ev.target)) {
+            fromDrop = ev.target.cloneNode(true);
+            console.log('Cloned');
+        } else {
+            fromDrop = ev.target;
+            console.log('Content');
+        }
+        console.log('Drop from: ' + fromDrop.className);
     }, false);
 
     e.addEventListener('drag', (ev) => {
+        if (rules.paretIsDrag(ev.target)) {
+            fromDrop = ev.target.cloneNode(true);
+            console.log('Cloned');
+        } else {
+            fromDrop = ev.target;
+            console.log('Content');
+        }
         console.log('dragging');
     }, false);
 
 }
 
-
 const mouse = {
-    inset: inset
+    add: add,
+    addDrop: addDrop,
+    addTrash: addTrash
 }
 
 module.exports = mouse
 
 /***/ }),
 /* 1 */
+/***/ (function(module, exports) {
+
+let check = (el) => {
+    if (new RegExp('item-drop').test(fromDrop.className)) {
+        if (!(new RegExp('drag').test(el.parentNode.className)) && ((new RegExp('drop').test(el.className)) && !(new RegExp('drop').test(el.parentNode.className))))
+            return true
+        else
+            return false
+    } else {
+        if (!(new RegExp('drag').test(el.parentNode.className)))
+            return true
+        else
+            return false
+    }
+}
+
+let paretIsDrag = (el) => {
+    if (el.parentNode.className.indexOf('drag') >= 0)
+        return true
+    else
+        return false
+}
+
+let remove = (el) => {
+    if (el.className.indexOf('trash') >= 0 || el.parentNode.className.indexOf('trash') >= 0)
+        return true
+    else
+        return false
+}
+
+const rules = {
+    check: check,
+    paretIsDrag: paretIsDrag,
+    remove: remove
+}
+
+module.exports = rules
+
+/***/ }),
+/* 2 */
 /***/ (function(module, exports, __webpack_require__) {
 
 const click = __webpack_require__(0);
+var item = document.getElementsByClassName('item'),
+    itemdrop = document.getElementsByClassName('item-drop'),
+    drop = document.getElementsByClassName('drop');
+    trash = document.getElementsByClassName('trash');
 
-var element;
-const type = ['item', 'item-drop'];
+var toDrop, fromDrop;
+
 
 window.onload = function() {
-    click.inset();
+    for (e of item) click.add(e)
+    for (e of drop) click.addDrop(e);
+    for (e of itemdrop) click.addDrop(e);
+    for (e of trash) click.addTrash(e);
 }
 
-document.onmouseover = function(e) {
-    var targ;
-    if (!e) var e = window.event;
-    if (e.target) targ = e.target;
-    else if(e.srcElement) targ = e.srcElement;
-    if(targ.nodeType === 3)
-        targ = targ.parentNode;
-    element = targ;
-    //console.log(element.className);
-}
+
 
 
 

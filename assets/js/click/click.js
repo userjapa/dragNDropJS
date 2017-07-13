@@ -1,8 +1,4 @@
-var item = document.getElementsByClassName('item'),
-    itemdrop = document.getElementsByClassName('item-drop'),
-    drop = document.getElementsByClassName('drop');
-
-var toDrop;
+let rules = require('./rules.js')
 
 let addAtribute = (e) => {
     e.setAttribute('draggable', 'true');
@@ -27,32 +23,61 @@ let addDrop = (e) => {
 
     e.addEventListener('drop', (ev) => {
         ev.preventDefault();
-        ev.target.appendChild(toDrop);
-        console.log(toDrop.className+' dropped');
+        if (rules.check(ev.target)) {
+            ev.target.appendChild(fromDrop);
+            console.log('Drop to '+ev.target.className);
+        } else {
+            console.log('NOT A VALID ELEMENT TO BE DROPED!');
+        }
     }, false);
 }
 
-let inset = () => {
-    for (e of item) add(e)
-    for (e of drop) addDrop(e);
-    for (e of itemdrop) addDrop(e);
+let addTrash = (e) => {
+    e.addEventListener('dragover', (ev) => {
+        ev.preventDefault();
+        console.log('Prepared to drop');
+    }, false);
+
+    e.addEventListener('drop', (ev) => {
+        ev.preventDefault();
+        if (rules.remove(ev.target)) {
+            fromDrop.parentNode.removeChild(fromDrop);
+            console.log('deleted');
+        } else {
+            console.log('NOT A VALID ELEMENT TO BE DROPED!');
+        }
+    }, false)
 }
 
 let insert = (e) => {
     e.addEventListener('dragstart', (ev) => {
-        toDrop = ev.target.cloneNode(true);
-        console.log('To drop: '+toDrop.className);
+        if (rules.paretIsDrag(ev.target)) {
+            fromDrop = ev.target.cloneNode(true);
+            console.log('Cloned');
+        } else {
+            fromDrop = ev.target;
+            console.log('Content');
+        }
+        console.log('Drop from: ' + fromDrop.className);
     }, false);
 
     e.addEventListener('drag', (ev) => {
+        if (rules.paretIsDrag(ev.target)) {
+            fromDrop = ev.target.cloneNode(true);
+            console.log('Cloned');
+        } else {
+            fromDrop = ev.target;
+            console.log('Content');
+        }
         console.log('dragging');
     }, false);
 
 }
 
-
 const mouse = {
-    inset: inset
+    add: add,
+    addDrop: addDrop,
+    addTrash: addTrash
 }
 
 module.exports = mouse

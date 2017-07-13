@@ -1,20 +1,18 @@
 const click = require('./click/click.js');
+var item = document.getElementsByClassName('item'),
+    itemdrop = document.getElementsByClassName('item-drop'),
+    drop = document.getElementsByClassName('drop');
+    trash = document.getElementsByClassName('trash');
 
-var element;
-const type = ['item', 'item-drop'];
+var toDrop, fromDrop;
+
 
 window.onload = function() {
-    click.inset();
+    for (e of item) click.add(e)
+    for (e of drop) click.addDrop(e);
+    for (e of itemdrop) click.addDrop(e);
+    for (e of trash) click.addTrash(e);
 }
 
-document.onmouseover = function(e) {
-    var targ;
-    if (!e) var e = window.event;
-    if (e.target) targ = e.target;
-    else if(e.srcElement) targ = e.srcElement;
-    if(targ.nodeType === 3)
-        targ = targ.parentNode;
-    element = targ;
-    //console.log(element.className);
-}
+
 

@@ -134,7 +134,11 @@ let addDrop = (e) => {
         if (rules.check(ev.target)) {
             var aux = clone.get()
             add(aux)
-            ev.target.appendChild(aux)
+            if (rules.insert(ev.target))
+                ev.target.appendChild(aux)
+            else
+                ev.target.parentNode.insertBefore(aux, ev.target)
+                
             console.log('Drop to ' + aux.parentNode.className)
         } else {
             console.log('NOT A VALID ELEMENT TO BE DROPED!')
@@ -175,30 +179,37 @@ module.exports = mouse
 let clone = __webpack_require__(0)
 
 let check = (el) => {
-    var aux = clone.get()
-    if (new RegExp('item-drop').test(aux.className)) {
-        if (!(new RegExp('drag').test(el.parentNode.className)) && ((new RegExp('drop').test(el.className)) && !(new RegExp('drop').test(el.parentNode.className))))
-            return true
-        else
-            return false
+    if (new RegExp('drop').test(el.className) || new RegExp('drop').test(el.parentNode.className)) {
+        return true;
     } else {
-        if (!(new RegExp('drag').test(el.parentNode.className)))
-            return true
-        else
-            return false
+        return false
     }
 }
 
 let remove = (el) => {
-    if (el.className.indexOf('trash') >= 0 || el.parentNode.className.indexOf('trash') >= 0)
+    if (new RegExp('trash').test(el.className) || new RegExp('trash').test(el.parentNode.className))
         return true
     else
         return false
 }
 
+let insert = (el) => {
+    var aux = clone.get()
+    if (new RegExp('drop').test(el.className)) {
+        if ((new RegExp('drop').test(el.parentNode.className)) && (new RegExp('drop').test(aux.className))) {
+            return false
+        } else { 
+            return true
+        }
+    } else {
+        return false
+    } 
+}
+
 const rules = {
-    check : check,
-    remove : remove
+    check: check,
+    remove: remove,
+    insert: insert
 }
 
 module.exports = rules

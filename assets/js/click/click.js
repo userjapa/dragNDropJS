@@ -35,7 +35,11 @@ let addDrop = (e) => {
         if (rules.check(ev.target)) {
             var aux = clone.get()
             add(aux)
-            ev.target.appendChild(aux)
+            if (rules.insert(ev.target))
+                ev.target.appendChild(aux)
+            else
+                ev.target.parentNode.insertBefore(aux, ev.target)
+                
             console.log('Drop to ' + aux.parentNode.className)
         } else {
             console.log('NOT A VALID ELEMENT TO BE DROPED!')

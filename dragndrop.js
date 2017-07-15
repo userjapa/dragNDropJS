@@ -70,17 +70,23 @@
 /* 0 */
 /***/ (function(module, exports) {
 
-var toDrop;
+var toDrop, parent;
 
 let get = () => {
     return toDrop;
 }
 
+let getParent = () => {
+    return parent;
+} 
+
 let set = (el) => {
     if (new RegExp('drag-copy').test(el.parentNode.className)) {
+        parent = el.parentNode.className;
         toDrop = el.cloneNode(true);
         console.log('Cloned '+ toDrop.className + '---------')
     } else {
+        parent = el.parentNode.className;
         toDrop = el;
         console.log('Got '+ toDrop.className + '---------')
     }
@@ -88,7 +94,8 @@ let set = (el) => {
 
 let drop = {
     get : get,
-    set : set
+    set : set,
+    getParent : getParent
 }
 
 module.exports = drop
@@ -195,10 +202,11 @@ let remove = (el) => {
 
 let insert = (el) => {
     var aux = clone.get()
+    var parent = clone.getParent()
     if (new RegExp('drop').test(el.className)) {
         if ((new RegExp('drop').test(el.parentNode.className)) && (new RegExp('drop').test(aux.className))) {
             return false
-        } else { 
+        } else {
             return true
         }
     } else {

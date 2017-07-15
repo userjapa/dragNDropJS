@@ -17,10 +17,11 @@ let remove = (el) => {
 
 let insert = (el) => {
     var aux = clone.get()
+    var parent = clone.getParent()
     if (new RegExp('drop').test(el.className)) {
         if ((new RegExp('drop').test(el.parentNode.className)) && (new RegExp('drop').test(aux.className))) {
             return false
-        } else { 
+        } else {
             return true
         }
     } else {

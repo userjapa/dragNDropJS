@@ -1,77 +1,64 @@
-let rules = require('./rules.js')
-
-let addAtribute = (e) => {
-    e.setAttribute('draggable', 'true');
-}
+let rules = require('./../rules/rules.js'),
+    clone = require('./../clone/clone.js')
 
 let add = (e) => {
+
+    e.setAttribute('draggable', 'true')
+
     e.addEventListener('mousedown', () => {
-        e.style.cursor = 'all-scroll';
-    }, false);
+        e.style.cursor = 'all-scroll'
+    }, false)
     e.addEventListener('mouseup', () => {
-        e.style.cursor = 'pointer';
-    }, false);
-    addAtribute(e);
-    insert(e);
+        e.style.cursor = 'pointer'
+    }, false)
+
+    e.addEventListener('dragstart', (ev) => {
+        clone.set(ev.target)
+        console.log('Drop to: ' + clone.get().className)
+    }, false)
+
+    e.addEventListener('drag', (ev) => {
+        clone.set(ev.target)
+        console.log('dragging')
+    }, false)
+    
 }
 
 let addDrop = (e) => {
     e.addEventListener('dragover', (ev) => {
-        ev.preventDefault();
-        console.log('Prepared to drop');
-    }, false);
+        ev.preventDefault()
+        console.log('Prepared to drop')
+    }, false)
 
     e.addEventListener('drop', (ev) => {
-        ev.preventDefault();
+        ev.preventDefault()
         if (rules.check(ev.target)) {
-            ev.target.appendChild(fromDrop);
-            console.log('Drop to '+ev.target.className);
+            var aux = clone.get()
+            add(aux)
+            ev.target.appendChild(aux)
+            console.log('Drop to ' + aux.parentNode.className)
         } else {
-            console.log('NOT A VALID ELEMENT TO BE DROPED!');
-        }
-    }, false);
-}
-
-let addTrash = (e) => {
-    e.addEventListener('dragover', (ev) => {
-        ev.preventDefault();
-        console.log('Prepared to drop');
-    }, false);
-
-    e.addEventListener('drop', (ev) => {
-        ev.preventDefault();
-        if (rules.remove(ev.target)) {
-            fromDrop.parentNode.removeChild(fromDrop);
-            console.log('deleted');
-        } else {
-            console.log('NOT A VALID ELEMENT TO BE DROPED!');
+            console.log('NOT A VALID ELEMENT TO BE DROPED!')
         }
     }, false)
 }
 
-let insert = (e) => {
-    e.addEventListener('dragstart', (ev) => {
-        if (rules.paretIsDrag(ev.target)) {
-            fromDrop = ev.target.cloneNode(true);
-            console.log('Cloned');
-        } else {
-            fromDrop = ev.target;
-            console.log('Content');
-        }
-        console.log('Drop from: ' + fromDrop.className);
-    }, false);
+let addTrash = (e) => {
+    e.addEventListener('dragover', (ev) => {
+        ev.preventDefault()
+        console.log('Prepared to drop')
+    }, false)
 
-    e.addEventListener('drag', (ev) => {
-        if (rules.paretIsDrag(ev.target)) {
-            fromDrop = ev.target.cloneNode(true);
-            console.log('Cloned');
+    e.addEventListener('drop', (ev) => {
+        ev.preventDefault()
+        if (rules.remove(ev.target)) {
+            var aux = clone.get()
+            aux.parentNode.removeChild(aux)
+            console.log('deleted')
         } else {
-            fromDrop = ev.target;
-            console.log('Content');
+            console.log('NOT A VALID ELEMENT TO BE DROPED!')
         }
-        console.log('dragging');
-    }, false);
-
+    }, false)
 }
 
 const mouse = {

@@ -48,7 +48,7 @@ function drop(event) {
     var data = event.dataTransfer.getData("Text");
     event.target.appendChild(document.getElementById(data));
     document.getElementById("demo").innerHTML = "The p element was dropped";
-    console.log('droped'+event.target.id)
+    console.log('droped '+event.target.id)
 }
 </script>
 

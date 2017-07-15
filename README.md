@@ -1,12 +1,12 @@
 # dragNDropJS
 
-*Drag:
+* Drag:
 Insert the class 'drag' in the component which will contain the itens to be dragged;
 
 COPY: To copy the elements you must use the class 'drag-copy'.
 Obs: To copy you have to isert both classes.
 
-*Drop:
+* Drop:
 Insert the class 'drop' to the element which will receive the item.
 
 *Item:

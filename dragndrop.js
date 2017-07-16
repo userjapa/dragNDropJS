@@ -63,30 +63,25 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 3);
+/******/ 	return __webpack_require__(__webpack_require__.s = 4);
 /******/ })
 /************************************************************************/
 /******/ ([
 /* 0 */
 /***/ (function(module, exports) {
 
-var toDrop, parent;
+var toDrop
+
 
 let get = () => {
     return toDrop;
 }
 
-let getParent = () => {
-    return parent;
-} 
-
 let set = (el) => {
     if (new RegExp('drag-copy').test(el.parentNode.className)) {
-        parent = el.parentNode.className;
         toDrop = el.cloneNode(true);
         console.log('Cloned '+ toDrop.className + '---------')
     } else {
-        parent = el.parentNode.className;
         toDrop = el;
         console.log('Got '+ toDrop.className + '---------')
     }
@@ -94,8 +89,7 @@ let set = (el) => {
 
 let drop = {
     get : get,
-    set : set,
-    getParent : getParent
+    set : set
 }
 
 module.exports = drop
@@ -104,7 +98,27 @@ module.exports = drop
 /* 1 */
 /***/ (function(module, exports, __webpack_require__) {
 
-let rules = __webpack_require__(2),
+const click = __webpack_require__(2)
+
+var item = document.getElementsByClassName('item'),
+    itemdrop = document.getElementsByClassName('item-drop'),
+    drop = document.getElementsByClassName('drop'),
+    trash = document.getElementsByClassName('trash')
+
+
+let run = () => {
+    for (e of item) click.add(e)
+    for (e of itemdrop) click.addDrop(e, drop)
+    for (e of drop) click.addDrop(e, drop)
+    for (e of trash) click.addTrash(e)
+}
+
+
+/***/ }),
+/* 2 */
+/***/ (function(module, exports, __webpack_require__) {
+
+let rules = __webpack_require__(3),
     clone = __webpack_require__(0)
 
 let add = (e) => {
@@ -180,7 +194,7 @@ const mouse = {
 module.exports = mouse
 
 /***/ }),
-/* 2 */
+/* 3 */
 /***/ (function(module, exports, __webpack_require__) {
 
 let clone = __webpack_require__(0)
@@ -202,7 +216,7 @@ let remove = (el) => {
 
 let insert = (el) => {
     var aux = clone.get()
-    var parent = clone.getParent()
+    
     if (new RegExp('drop').test(el.className)) {
         if ((new RegExp('drop').test(el.parentNode.className)) && (new RegExp('drop').test(aux.className))) {
             return false
@@ -223,20 +237,13 @@ const rules = {
 module.exports = rules
 
 /***/ }),
-/* 3 */
+/* 4 */
 /***/ (function(module, exports, __webpack_require__) {
 
-const click = __webpack_require__(1);
-var item = document.getElementsByClassName('item'),
-    itemdrop = document.getElementsByClassName('item-drop'),
-    drop = document.getElementsByClassName('drop');
-    trash = document.getElementsByClassName('trash');
+const elements = __webpack_require__(1)
 
 window.onload = function () {
-    for (e of item) click.add(e)
-    for (e of drop) click.addDrop(e);
-    for (e of itemdrop) click.addDrop(e);
-    for (e of trash) click.addTrash(e);
+    elements.run()
 }
 
 

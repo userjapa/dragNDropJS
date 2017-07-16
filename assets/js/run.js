@@ -1,6 +1,6 @@
 const elements = require('./elements/elements.js')
 
-window.onload = function () {
+window.onload = () => {
     elements.run()
 }
 

@@ -8,7 +8,13 @@ var item = document.getElementsByClassName('item'),
 
 let run = () => {
     for (e of item) click.add(e)
-    for (e of itemdrop) click.addDrop(e, drop)
-    for (e of drop) click.addDrop(e, drop)
+    for (e of itemdrop) click.addDrop(e)
+    for (e of drop) click.addDrop(e)
     for (e of trash) click.addTrash(e)
 }
+
+const elements = {
+    run : run
+}
+
+module.exports = elements

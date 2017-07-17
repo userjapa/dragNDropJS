@@ -157,12 +157,12 @@ let add = (e) => {
     }, false)
 
     e.addEventListener('dragstart', (ev) => {
-        clone.set(ev.target)
+        clone.set(clone.checkEl(ev.target))
         console.log('Drop to: ' + clone.get().className)
     }, false)
 
     e.addEventListener('drag', (ev) => {
-        clone.set(ev.target)
+        clone.set(clone.checkEl(ev.target))
         console.log('dragging')
     }, false)
     

@@ -1,0 +1,24 @@
+{
+  "name": "monk-grid",
+  "description": "A css framework created with flexbox",
+  "main": "index.js",
+  "authors": [
+    "Gustavo Quinalha"
+  ],
+  "license": "ISC",
+  "keywords": [
+    "css",
+    "framework",
+    "flexbox",
+    "monk",
+    "agmonk"
+  ],
+  "homepage": "https://github.com/AgenciaMonk/monk-grid",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}

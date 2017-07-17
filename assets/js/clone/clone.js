@@ -13,6 +13,7 @@ let set = (el) => {
         toDrop = el;
         console.log('Got '+ toDrop.className + '---------')
     }
+    allowEdit(toDrop)
 }
 
 let checkEl = (el) => {
@@ -22,8 +23,17 @@ let checkEl = (el) => {
         return checkEl(el.parentNode)
     }
 }
+
+let allowEdit = (el) => {
+    var tags = ['P','PRE','H1','H2','H3','H4','H5','H6','SPAN','STRONG']
+    var itens = el.childNodes
+    for (e of itens) {
+        if (tags.includes(e.tagName))
+            e.contentEditable = true
+    }
+}
  
-let drop = {
+const drop = {
     get : get,
     set : set,
     checkEl : checkEl

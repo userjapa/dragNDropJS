@@ -20,8 +20,7 @@ let add = (e) => {
     e.addEventListener('drag', (ev) => {
         clone.set(clone.checkEl(ev.target))
         console.log('dragging')
-    }, false)
-    
+    }, false)    
 }
 
 let addDrop = (e) => {

@@ -1,3 +1,4 @@
+var DragNDrop =
 /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -87,9 +88,18 @@ let set = (el) => {
     }
 }
 
+let checkEl = (el) => {
+    if (new RegExp('drop').test(el.className) || new RegExp('item').test(el.className)) {
+        return el
+    } else {
+        return checkEl(el.parentNode)
+    }
+}
+ 
 let drop = {
     get : get,
-    set : set
+    set : set,
+    checkEl : checkEl
 }
 
 module.exports = drop
@@ -105,6 +115,13 @@ var item = document.getElementsByClassName('item'),
     drop = document.getElementsByClassName('drop'),
     trash = document.getElementsByClassName('trash')
 
+let get = () => {
+    item = document.getElementsByClassName('item'),
+    itemdrop = document.getElementsByClassName('item-drop'),
+    drop = document.getElementsByClassName('drop'),
+    trash = document.getElementsByClassName('trash')
+}
+
 
 let run = () => {
     for (e of item) click.add(e)
@@ -114,7 +131,8 @@ let run = () => {
 }
 
 const elements = {
-    run : run
+    run : run,
+    get : get 
 }
 
 module.exports = elements
@@ -158,17 +176,18 @@ let addDrop = (e) => {
 
     e.addEventListener('drop', (ev) => {
         ev.preventDefault()
-        if (rules.check(ev.target)) {
+        var el = clone.checkEl(ev.target)
+        if (rules.check(el)) {
             var aux = clone.get()
             add(aux)
-            if (rules.insert(ev.target))
-                ev.target.appendChild(aux)
+            if (rules.insert(el))
+                el.appendChild(aux)
             else
-                ev.target.parentNode.insertBefore(aux, ev.target)
+                el.parentNode.insertBefore(aux, el)
                 
             console.log('Drop to ' + aux.parentNode.className)
         } else {
-            console.log('NOT A VALID ELEMENT TO BE DROPED!')
+            console.log('NOT A VALID ELEMENT TO BE DROPED! Class: '+ev.target.className)
         }
     }, false)
 }
@@ -206,10 +225,10 @@ module.exports = mouse
 let clone = __webpack_require__(0)
 
 let check = (el) => {
-    if ((new RegExp('drop').test(el.className)) && !(new RegExp('drag').test(el.parentNode.className))) {
-        return true;
+    if (new RegExp('drag').test(el.parentNode.className)) {
+        return false;
     } else {
-        return false
+        return true;
     }
 }
 
@@ -248,11 +267,18 @@ module.exports = rules
 
 const elements = __webpack_require__(1)
 
-window.onload = () => {
+let exec = () => {
+    elements.get()
     elements.run()
 }
 
+const run = {
+    run : exec
+}
 
+console.log('Loaded')
+
+module.exports = run
 
 /***/ })
 /******/ ]);

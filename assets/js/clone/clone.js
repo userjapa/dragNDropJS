@@ -15,9 +15,18 @@ let set = (el) => {
     }
 }
 
+let checkEl = (el) => {
+    if (new RegExp('drop').test(el.className) || new RegExp('item').test(el.className)) {
+        return el
+    } else {
+        return checkEl(el.parentNode)
+    }
+}
+ 
 let drop = {
     get : get,
-    set : set
+    set : set,
+    checkEl : checkEl
 }
 
 module.exports = drop

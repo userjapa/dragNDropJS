@@ -1,10 +1,10 @@
 let clone = require('./../clone/clone.js')
 
 let check = (el) => {
-    if ((new RegExp('drop').test(el.className)) && !(new RegExp('drag').test(el.parentNode.className))) {
-        return true;
+    if (new RegExp('drag').test(el.parentNode.className)) {
+        return false;
     } else {
-        return false
+        return true;
     }
 }
 

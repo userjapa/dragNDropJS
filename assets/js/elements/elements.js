@@ -5,6 +5,13 @@ var item = document.getElementsByClassName('item'),
     drop = document.getElementsByClassName('drop'),
     trash = document.getElementsByClassName('trash')
 
+let get = () => {
+    item = document.getElementsByClassName('item'),
+    itemdrop = document.getElementsByClassName('item-drop'),
+    drop = document.getElementsByClassName('drop'),
+    trash = document.getElementsByClassName('trash')
+}
+
 
 let run = () => {
     for (e of item) click.add(e)
@@ -14,7 +21,8 @@ let run = () => {
 }
 
 const elements = {
-    run : run
+    run : run,
+    get : get 
 }
 
 module.exports = elements

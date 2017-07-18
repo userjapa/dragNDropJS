@@ -1,18 +1,21 @@
-var toDrop
+var toDrop, parent
 
 
 let get = () => {
     return toDrop;
 }
 
+let getParent= () => {
+    return parent;
+}
+
 let set = (el) => {
     if (new RegExp('drag-copy').test(el.parentNode.className)) {
         toDrop = el.cloneNode(true);
-        console.log('Cloned ' + toDrop.className + '---------')
     } else {
         toDrop = el;
-        console.log('Got ' + toDrop.className + '---------')
     }
+    parent = el.parentNode
     el.contentEditable = true;
 }
 
@@ -25,9 +28,10 @@ let checkEl = (el) => {
 }
 
 const drop = {
-    get: get,
-    set: set,
-    checkEl: checkEl
+    get : get,
+    set : set,
+    checkEl : checkEl,
+    getParent : getParent
 }
 
 module.exports = drop

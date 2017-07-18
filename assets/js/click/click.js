@@ -14,33 +14,29 @@ let add = (e) => {
 
     e.addEventListener('dragstart', (ev) => {
         clone.set(clone.checkEl(ev.target))
-        console.log('Drop to: ' + clone.get().className)
     }, false)
 
     e.addEventListener('drag', (ev) => {
         clone.set(clone.checkEl(ev.target))
-        console.log('dragging')
     }, false)    
 }
 
 let addDrop = (e) => {
     e.addEventListener('dragover', (ev) => {
         ev.preventDefault()
-        console.log('Prepared to drop')
     }, false)
 
     e.addEventListener('drop', (ev) => {
         ev.preventDefault()
-        var el = clone.checkEl(ev.target)
-        if (rules.check(el)) {
+        if (rules.check(ev.target)) {
             var aux = clone.get()
             add(aux)
-            if (rules.insert(el))
-                el.appendChild(aux)
+            var aux2 = clone.checkEl(ev.target)
+            if (rules.insert(aux2))
+                aux2.appendChild(aux)
             else
-                el.parentNode.insertBefore(aux, el)
+                aux2.parentNode.insertBefore(aux, aux2)
                 
-            console.log('Drop to ' + aux.parentNode.className)
         } else {
             console.log('NOT A VALID ELEMENT TO BE DROPED! Class: '+ev.target.className)
         }
@@ -50,7 +46,6 @@ let addDrop = (e) => {
 let addTrash = (e) => {
     e.addEventListener('dragover', (ev) => {
         ev.preventDefault()
-        console.log('Prepared to drop')
     }, false)
 
     e.addEventListener('drop', (ev) => {
@@ -58,7 +53,6 @@ let addTrash = (e) => {
         if (rules.remove(ev.target)) {
             var aux = clone.get()
             aux.parentNode.removeChild(aux)
-            console.log('deleted')
         } else {
             console.log('NOT A VALID ELEMENT TO BE DROPED!')
         }

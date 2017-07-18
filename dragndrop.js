@@ -71,21 +71,24 @@ var DragNDrop =
 /* 0 */
 /***/ (function(module, exports) {
 
-var toDrop
+var toDrop, parent
 
 
 let get = () => {
     return toDrop;
 }
 
+let getParent= () => {
+    return parent;
+}
+
 let set = (el) => {
     if (new RegExp('drag-copy').test(el.parentNode.className)) {
         toDrop = el.cloneNode(true);
-        console.log('Cloned ' + toDrop.className + '---------')
     } else {
         toDrop = el;
-        console.log('Got ' + toDrop.className + '---------')
     }
+    parent = el.parentNode
     el.contentEditable = true;
 }
 
@@ -98,9 +101,10 @@ let checkEl = (el) => {
 }
 
 const drop = {
-    get: get,
-    set: set,
-    checkEl: checkEl
+    get : get,
+    set : set,
+    checkEl : checkEl,
+    getParent : getParent
 }
 
 module.exports = drop
@@ -159,33 +163,29 @@ let add = (e) => {
 
     e.addEventListener('dragstart', (ev) => {
         clone.set(clone.checkEl(ev.target))
-        console.log('Drop to: ' + clone.get().className)
     }, false)
 
     e.addEventListener('drag', (ev) => {
         clone.set(clone.checkEl(ev.target))
-        console.log('dragging')
     }, false)    
 }
 
 let addDrop = (e) => {
     e.addEventListener('dragover', (ev) => {
         ev.preventDefault()
-        console.log('Prepared to drop')
     }, false)
 
     e.addEventListener('drop', (ev) => {
         ev.preventDefault()
-        var el = clone.checkEl(ev.target)
-        if (rules.check(el)) {
+        if (rules.check(ev.target)) {
             var aux = clone.get()
             add(aux)
-            if (rules.insert(el))
-                el.appendChild(aux)
+            var aux2 = clone.checkEl(ev.target)
+            if (rules.insert(aux2))
+                aux2.appendChild(aux)
             else
-                el.parentNode.insertBefore(aux, el)
+                aux2.parentNode.insertBefore(aux, aux2)
                 
-            console.log('Drop to ' + aux.parentNode.className)
         } else {
             console.log('NOT A VALID ELEMENT TO BE DROPED! Class: '+ev.target.className)
         }
@@ -195,7 +195,6 @@ let addDrop = (e) => {
 let addTrash = (e) => {
     e.addEventListener('dragover', (ev) => {
         ev.preventDefault()
-        console.log('Prepared to drop')
     }, false)
 
     e.addEventListener('drop', (ev) => {
@@ -203,7 +202,6 @@ let addTrash = (e) => {
         if (rules.remove(ev.target)) {
             var aux = clone.get()
             aux.parentNode.removeChild(aux)
-            console.log('deleted')
         } else {
             console.log('NOT A VALID ELEMENT TO BE DROPED!')
         }
@@ -225,11 +223,12 @@ module.exports = mouse
 let clone = __webpack_require__(0)
 
 let check = (el) => {
-    if (new RegExp('drag').test(el.parentNode.className)) {
-        return false;
-    } else {
-        return true;
-    }
+    var aux = verify(el)
+    if (new RegExp('drag').test(aux.className))
+        return false
+    else 
+        return true
+    
 }
 
 let remove = (el) => {
@@ -241,7 +240,6 @@ let remove = (el) => {
 
 let insert = (el) => {
     var aux = clone.get()
-    
     if (new RegExp('drop').test(el.className)) {
         if ((new RegExp('drop').test(el.parentNode.className)) && (new RegExp('drop').test(aux.className))) {
             return false
@@ -251,6 +249,13 @@ let insert = (el) => {
     } else {
         return false
     } 
+}
+
+let verify = (el) => {
+    if (new RegExp('drag').test(el.className) || new RegExp('drop').test(el.className) && !new RegExp('item').test(el.className))
+        return el
+    else
+        return (verify(el.parentNode))
 }
 
 const rules = {

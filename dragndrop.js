@@ -71,15 +71,11 @@ var DragNDrop =
 /* 0 */
 /***/ (function(module, exports) {
 
-var toDrop, parent
+var toDrop
 
 
 let get = () => {
     return toDrop;
-}
-
-let getParent= () => {
-    return parent;
 }
 
 let set = (el) => {
@@ -88,8 +84,6 @@ let set = (el) => {
     } else {
         toDrop = el;
     }
-    parent = el.parentNode
-    el.contentEditable = true;
 }
 
 let checkEl = (el) => {
@@ -100,11 +94,18 @@ let checkEl = (el) => {
     }
 }
 
+let verify = (el) => {
+    if (new RegExp('drag').test(el.className) || (new RegExp('drop').test(el.className) && !new RegExp('item').test(el.className)))
+        return el
+    else
+        return verify(el.parentNode)
+}
+
 const drop = {
     get : get,
     set : set,
     checkEl : checkEl,
-    getParent : getParent
+    verify : verify
 }
 
 module.exports = drop
@@ -181,6 +182,7 @@ let addDrop = (e) => {
             var aux = clone.get()
             add(aux)
             var aux2 = clone.checkEl(ev.target)
+            aux.contentEditable = true
             if (rules.insert(aux2))
                 aux2.appendChild(aux)
             else
@@ -200,7 +202,7 @@ let addTrash = (e) => {
     e.addEventListener('drop', (ev) => {
         ev.preventDefault()
         if (rules.remove(ev.target)) {
-            var aux = clone.get()
+            var aux = clone.checkEl(clone.get())
             aux.parentNode.removeChild(aux)
         } else {
             console.log('NOT A VALID ELEMENT TO BE DROPED!')
@@ -223,7 +225,7 @@ module.exports = mouse
 let clone = __webpack_require__(0)
 
 let check = (el) => {
-    var aux = verify(el)
+    var aux = clone.verify(el)
     if (new RegExp('drag').test(aux.className))
         return false
     else 
@@ -249,13 +251,6 @@ let insert = (el) => {
     } else {
         return false
     } 
-}
-
-let verify = (el) => {
-    if (new RegExp('drag').test(el.className) || new RegExp('drop').test(el.className) && !new RegExp('item').test(el.className))
-        return el
-    else
-        return (verify(el.parentNode))
 }
 
 const rules = {

@@ -32,6 +32,7 @@ let addDrop = (e) => {
             var aux = clone.get()
             add(aux)
             var aux2 = clone.checkEl(ev.target)
+            aux.contentEditable = true
             if (rules.insert(aux2))
                 aux2.appendChild(aux)
             else
@@ -51,7 +52,7 @@ let addTrash = (e) => {
     e.addEventListener('drop', (ev) => {
         ev.preventDefault()
         if (rules.remove(ev.target)) {
-            var aux = clone.get()
+            var aux = clone.checkEl(clone.get())
             aux.parentNode.removeChild(aux)
         } else {
             console.log('NOT A VALID ELEMENT TO BE DROPED!')

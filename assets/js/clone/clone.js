@@ -1,12 +1,8 @@
-var toDrop, parent
+var toDrop
 
 
 let get = () => {
     return toDrop;
-}
-
-let getParent= () => {
-    return parent;
 }
 
 let set = (el) => {
@@ -15,8 +11,6 @@ let set = (el) => {
     } else {
         toDrop = el;
     }
-    parent = el.parentNode
-    el.contentEditable = true;
 }
 
 let checkEl = (el) => {
@@ -27,11 +21,18 @@ let checkEl = (el) => {
     }
 }
 
+let verify = (el) => {
+    if (new RegExp('drag').test(el.className) || (new RegExp('drop').test(el.className) && !new RegExp('item').test(el.className)))
+        return el
+    else
+        return verify(el.parentNode)
+}
+
 const drop = {
     get : get,
     set : set,
     checkEl : checkEl,
-    getParent : getParent
+    verify : verify
 }
 
 module.exports = drop

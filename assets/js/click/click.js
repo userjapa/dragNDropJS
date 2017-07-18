@@ -52,7 +52,7 @@ let addTrash = (e) => {
     e.addEventListener('drop', (ev) => {
         ev.preventDefault()
         if (rules.remove(ev.target)) {
-            var aux = clone.checkEl(clone.get())
+            var aux = clone.get()
             aux.parentNode.removeChild(aux)
         } else {
             console.log('NOT A VALID ELEMENT TO BE DROPED!')

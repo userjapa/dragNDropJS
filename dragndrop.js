@@ -79,7 +79,8 @@ let get = () => {
 }
 
 let set = (el) => {
-    if (new RegExp('drag-copy').test(el.parentNode.className)) {
+    var aux = verify(el)
+    if (new RegExp('drag-copy').test(aux.className)) {
         toDrop = el.cloneNode(true);
     } else {
         toDrop = el;
@@ -202,7 +203,7 @@ let addTrash = (e) => {
     e.addEventListener('drop', (ev) => {
         ev.preventDefault()
         if (rules.remove(ev.target)) {
-            var aux = clone.checkEl(clone.get())
+            var aux = clone.get()
             aux.parentNode.removeChild(aux)
         } else {
             console.log('NOT A VALID ELEMENT TO BE DROPED!')

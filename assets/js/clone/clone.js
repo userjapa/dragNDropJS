@@ -6,7 +6,8 @@ let get = () => {
 }
 
 let set = (el) => {
-    if (new RegExp('drag-copy').test(el.parentNode.className)) {
+    var aux = verify(el)
+    if (new RegExp('drag-copy').test(aux.className)) {
         toDrop = el.cloneNode(true);
     } else {
         toDrop = el;
